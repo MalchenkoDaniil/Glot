@@ -1,0 +1,30 @@
+{
+    "Entries": [
+        {
+            "Key": "test",
+            "Values": [
+                {
+                    "Language": "ru",
+                    "Text": "Тест"
+                },
+                {
+                    "Language": "en",
+                    "Text": "Test"
+                }
+            ]
+        },
+        {
+            "Key": "play",
+            "Values": [
+                {
+                    "Language": "ru",
+                    "Text": "Играть"
+                },
+                {
+                    "Language": "en",
+                    "Text": ""
+                }
+            ]
+        }
+    ]
+}
