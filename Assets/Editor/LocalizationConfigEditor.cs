@@ -11,7 +11,7 @@ namespace Localization.EditorTools
         {
             DrawDefaultInspector();
             EditorGUILayout.Space();
-            
+
             if (GUILayout.Button("Open Table Editor", GUILayout.Height(28)))
                 LocalizationTableWindow.Open((LocalizationConfig)target);
         }

@@ -18,7 +18,7 @@ namespace Localization.EditorTools
         public static LocalizationTextValue Cell(this LocalizationTextData entry, string language)
         {
             var cell = entry.Values.Find(v => v.Language == language);
-            
+
             if (cell == null)
             {
                 cell = new LocalizationTextValue { Language = language, Text = "" };
@@ -30,8 +30,8 @@ namespace Localization.EditorTools
         public static void EnsureLanguages(this LocalizationTextTable textTable, IReadOnlyList<string> languages)
         {
             foreach (var entry in textTable.Entries)
-                foreach (var language in languages)
-                    entry.Cell(language);
+            foreach (var language in languages)
+                entry.Cell(language);
         }
 
         public static void RemoveLanguage(this LocalizationTextTable textTable, string language)

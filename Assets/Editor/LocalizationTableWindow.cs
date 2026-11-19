@@ -87,7 +87,7 @@ namespace Localization.EditorTools
             {
                 _textTable.EnsureLanguages(_config.Languages);
                 CopySpriteEntriesFromConfig();
-                EnsureSpriteLanguages();
+                _spriteEntries.EnsureLanguages(_config.Languages);
             }
 
             Dirty = false;
@@ -369,7 +369,7 @@ namespace Localization.EditorTools
 
                         for (int l = 0; l < langs.Count; l++)
                         {
-                            var cell = GetOrCreateSpriteCell(entry, langs[l]);
+                            var cell = entry.Cell(langs[l]);
 
                             using (new EditorGUILayout.HorizontalScope(GUILayout.Width(ColumnWidth)))
                             {
@@ -409,17 +409,6 @@ namespace Localization.EditorTools
             }
         }
 
-        private static LocalizationSpriteValue GetOrCreateSpriteCell(LocalizationSpriteEntry entry, string language)
-        {
-            var cell = entry.Values.Find(v => v.Language == language);
-            if (cell == null)
-            {
-                cell = new LocalizationSpriteValue { Language = language, Sprite = null };
-                entry.Values.Add(cell);
-            }
-            return cell;
-        }
-
         private void AddTextKey(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -444,17 +433,15 @@ namespace Localization.EditorTools
             if (string.IsNullOrEmpty(key))
                 return;
 
-            if (_spriteEntries.Any(e => e.Key == key))
+            if (_spriteEntries.Find(key) != null)
             {
                 ShowNotification(new GUIContent("Sprite key already exists"));
                 return;
             }
 
-            var entry = new LocalizationSpriteEntry { Key = key };
-            foreach (var lang in _config.Languages)
-                entry.Values.Add(new LocalizationSpriteValue { Language = lang, Sprite = null });
+            _spriteEntries.Add(key);
+            _spriteEntries.EnsureLanguages(_config.Languages);
 
-            _spriteEntries.Add(entry);
             _newKey = "";
             Dirty = true;
             GUI.FocusControl(null);
@@ -481,7 +468,7 @@ namespace Localization.EditorTools
             so.ApplyModifiedProperties();
 
             _textTable.EnsureLanguages(_config.Languages);
-            EnsureSpriteLanguages();
+            _spriteEntries.EnsureLanguages(_config.Languages);
 
             Dirty = true;
         }
@@ -506,8 +493,7 @@ namespace Localization.EditorTools
             so.ApplyModifiedProperties();
 
             _textTable.RemoveLanguage(code);
-            foreach (var entry in _spriteEntries)
-                entry.Values.RemoveAll(v => v.Language == code);
+            _spriteEntries.RemoveLanguage(code);
 
             Dirty = true;
         }
@@ -523,15 +509,6 @@ namespace Localization.EditorTools
                 foreach (var v in src.Values)
                     copy.Values.Add(new LocalizationSpriteValue { Language = v.Language, Sprite = v.Sprite });
                 _spriteEntries.Add(copy);
-            }
-        }
-
-        private void EnsureSpriteLanguages()
-        {
-            foreach (var entry in _spriteEntries)
-            {
-                foreach (var lang in _config.Languages)
-                    GetOrCreateSpriteCell(entry, lang);
             }
         }
 
@@ -604,6 +581,7 @@ namespace Localization.EditorTools
 
                 EditorUtility.SetDirty(_config);
                 AssetDatabase.SaveAssets();
+                LocalizationEditorEvents.RaiseTableChanged();
             }
             finally
             {
