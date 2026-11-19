@@ -8,9 +8,9 @@ namespace Localization.Core
         private readonly Dictionary<string, Dictionary<string, string>> _texts =
             new Dictionary<string, Dictionary<string, string>>();
 
-        public TextStore(LocalizationTable table)
+        public TextStore(LocalizationTextTable textTable)
         {
-            foreach (var entry in table.Entries)
+            foreach (var entry in textTable.Entries)
             {
                 if (string.IsNullOrEmpty(entry.Key)) 
                     continue;

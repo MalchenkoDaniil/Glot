@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Localization.Data
 {
     [Serializable]
-    public class LocalizationData
+    public class LocalizationTextData
     {
         public string Key;
-        public List<LocalizationValue> Values = new List<LocalizationValue>();
+        public List<LocalizationTextValue> Values = new List<LocalizationTextValue>();
     }
 }

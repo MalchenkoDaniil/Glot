@@ -12,7 +12,9 @@ namespace Localization.Components
 
         protected override void Apply(ITextProvider provider)
         {
-            if (_text == null) _text = GetComponent<TMP_Text>();
+            if (_text == null)
+                _text = GetComponent<TMP_Text>();
+
             _text.text = provider.GetText(localizationKey);
         }
     }

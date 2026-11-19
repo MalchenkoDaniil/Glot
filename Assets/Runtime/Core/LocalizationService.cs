@@ -1,87 +1,113 @@
 using System;
 using System.Collections.Generic;
 using Localization.Abstractions;
-using Runtime.Abstractions;
+using Localization.Unity;
 using UnityEngine;
 
 namespace Localization.Core
 {
-    public sealed class LocalizationService :  ITextProvider, ISpriteProvider, ILanguageSwitcher
+    public sealed class LocalizationService : ITextProvider, ISpriteProvider, ILanguageSwitcher
     {
-        private readonly ILocalizationSettings _settings;
+        private readonly LocalizationConfig _config;
         private readonly TextStore _texts;
-        private readonly ResourcesSpriteLoader _resourcesSprites;
-        private readonly PlayerPrefsLanguageStorage _storage;
+        private readonly SpriteStore _sprites;
+        // private readonly PlayerPrefsLanguageStorage _storage;
 
         public event Action LanguageChanged;
         public string CurrentLanguage { get; private set; }
-        public IReadOnlyList<string> Languages => _settings.Languages;
+        public IReadOnlyList<string> Languages => _config.Languages;
 
-        public LocalizationService(ILocalizationSettings settings, TextAssetTableLoader textAssetTableLoader,
-            ResourcesSpriteLoader resourcesSpriteLoader, PlayerPrefsLanguageStorage storage)
+        public LocalizationService(
+            LocalizationConfig config,
+            TextAssetTableLoader textAssetTableLoader
+            /*PlayerPrefsLanguageStorage storage*/)
         {
-            _settings = settings;
-            _resourcesSprites = resourcesSpriteLoader;
-            _storage = storage;
-            
-            _texts = new TextStore(textAssetTableLoader.Load());
-            
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            // _storage = storage;
+
+            var table = textAssetTableLoader != null ? textAssetTableLoader.Load() : new Data.LocalizationTextTable();
+            _texts = new TextStore(table);
+            _sprites = new SpriteStore(_config.SpriteEntries);
+
             CurrentLanguage = ResolveStartLanguage();
         }
 
         public void SetLanguage(string language)
         {
-            if (language == CurrentLanguage) 
+            if (language == CurrentLanguage)
                 return;
-            
+
             if (!IsSupported(language))
             {
-                Debug.LogWarning($"Localization: language '{language}' not supported.");
+                Debug.LogWarning($"[Localization] Language '{language}' is not supported.");
                 return;
             }
 
             CurrentLanguage = language;
-            _storage.Save(language);
-            
+            // _storage?.Save(language);
+
             LanguageChanged?.Invoke();
         }
 
         public string GetText(string key)
         {
-            if (_texts.TryGet(CurrentLanguage, key, out var text)) 
+            if (string.IsNullOrEmpty(key))
+                return string.Empty;
+
+            if (_texts.TryGet(CurrentLanguage, key, out var text))
                 return text;
-            
-            if (CurrentLanguage != _settings.DefaultLanguage &&
-                _texts.TryGet(_settings.DefaultLanguage, key, out text)) 
+
+            if (CurrentLanguage != _config.DefaultLanguage &&
+                _texts.TryGet(_config.DefaultLanguage, key, out text))
                 return text;
-            
-            return key; 
+
+            return key;
         }
 
         public Sprite GetSprite(string key)
         {
-            var sprite = _resourcesSprites.Load(CurrentLanguage, key);
-            
-            if (sprite == null && CurrentLanguage != _settings.DefaultLanguage)
-                sprite = _resourcesSprites.Load(_settings.DefaultLanguage, key);
-            
-            return sprite;
+            if (string.IsNullOrEmpty(key))
+                return null;
+
+            if (_sprites.TryGet(CurrentLanguage, key, out var sprite))
+                return sprite;
+
+            if (CurrentLanguage != _config.DefaultLanguage &&
+                _sprites.TryGet(_config.DefaultLanguage, key, out sprite))
+                return sprite;
+
+            return null;
         }
 
         private string ResolveStartLanguage()
         {
-            var saved = _storage.Load();
-            if (IsSupported(saved)) return saved;
+            // var saved = _storage?.Load();
+            var saved = _config.DefaultLanguage;
+            
+            if (IsSupported(saved))
+                return saved;
 
             var system = SystemLanguageCodes.From(Application.systemLanguage);
-            return IsSupported(system) ? system : _settings.DefaultLanguage;
+            if (IsSupported(system))
+                return system;
+
+            if (IsSupported(_config.DefaultLanguage))
+                return _config.DefaultLanguage;
+
+            return _config.Languages.Count > 0 ? _config.Languages[0] : "en";
         }
 
         private bool IsSupported(string language)
         {
-            if (string.IsNullOrEmpty(language)) return false;
-            for (int i = 0; i < _settings.Languages.Count; i++)
-                if (_settings.Languages[i] == language) return true;
+            if (string.IsNullOrEmpty(language))
+                return false;
+
+            for (int i = 0; i < _config.Languages.Count; i++)
+            {
+                if (_config.Languages[i] == language)
+                    return true;
+            }
+
             return false;
         }
     }

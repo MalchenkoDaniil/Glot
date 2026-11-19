@@ -16,12 +16,12 @@ namespace Localization.EditorTools
                 : AssetDatabase.LoadAssetAtPath<LocalizationConfig>(AssetDatabase.GUIDToAssetPath(guids[0]));
         }
 
-        public static LocalizationTable LoadTable(LocalizationConfig config)
+        public static LocalizationTextTable LoadTable(LocalizationConfig config)
         {
             if (config == null || config.Table == null) 
-                return new LocalizationTable();
+                return new LocalizationTextTable();
             
-            return JsonUtility.FromJson<LocalizationTable>(config.Table.text) ?? new LocalizationTable();
+            return JsonUtility.FromJson<LocalizationTextTable>(config.Table.text) ?? new LocalizationTextTable();
         }
 
         public static IEnumerable<string> GetAllKeys()

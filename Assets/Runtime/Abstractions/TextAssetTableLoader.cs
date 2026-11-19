@@ -9,14 +9,14 @@ namespace Localization.Abstractions
 
         public TextAssetTableLoader(TextAsset asset) { _asset = asset; }
 
-        public LocalizationTable Load()
+        public LocalizationTextTable Load()
         {
             if (_asset == null)
             {
                 Debug.LogError("Localization: в конфиге не назначен JSON с переводами");
-                return new LocalizationTable();
+                return new LocalizationTextTable();
             }
-            return JsonUtility.FromJson<LocalizationTable>(_asset.text) ?? new LocalizationTable();
+            return JsonUtility.FromJson<LocalizationTextTable>(_asset.text) ?? new LocalizationTextTable();
         }
     }
 }

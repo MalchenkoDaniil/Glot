@@ -13,30 +13,38 @@ namespace Localization.Unity
 
         private void Awake()
         {
-            if (LocalizationLocator.Current != null) 
-            { 
+            if (LocalizationLocator.Current != null)
+            {
                 Destroy(gameObject);
-                return; 
+                return;
             }
 
             if (config == null)
             {
-                Debug.LogError("Localization config is null!", this); return;
+                Debug.LogError("[Localization] Config is null.", this);
+                return;
             }
 
-            _service = new LocalizationService(
-                config,
-                new TextAssetTableLoader(config.Table),
-                new ResourcesSpriteLoader(),
-                new PlayerPrefsLanguageStorage());
-
-            LocalizationLocator.Register(_service);
             DontDestroyOnLoad(gameObject);
+            Initialize();
         }
 
         private void OnDestroy()
         {
-            if (_service != null) LocalizationLocator.Unregister(_service);
+            if (_service == null)
+                return;
+
+            LocalizationLocator.Unregister(_service);
+            _service = null;
+        }
+
+        private void Initialize()
+        {
+            var tableLoader = new TextAssetTableLoader(config.Table);
+            // var storage = new PlayerPrefsLanguageStorage();
+
+            _service = new LocalizationService(config, tableLoader/*, storage*/);
+            LocalizationLocator.Register(_service);
         }
     }
 }

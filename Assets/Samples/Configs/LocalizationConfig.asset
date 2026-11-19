@@ -11,9 +11,22 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7e19a53501ac4a62b56a0c488fb4de2, type: 3}
   m_Name: LocalizationConfig
-  m_EditorClassIdentifier: Assembly-CSharp::Localization.LocalizationConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Localization.Unity.LocalizationConfig
   table: {fileID: 4900000, guid: de3f53d0b3bb54f48868dcab2ac4527d, type: 3}
   defaultLanguage: ru
   languages:
-  - ru
   - en
+  - ru
+  spriteEntries:
+  - Key: test
+    Values:
+    - Language: en
+      Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - Language: ru
+      Sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Key: won
+    Values:
+    - Language: en
+      Sprite: {fileID: 10917, guid: 0000000000000000f000000000000000, type: 0}
+    - Language: ru
+      Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}

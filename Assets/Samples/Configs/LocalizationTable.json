@@ -4,25 +4,51 @@
             "Key": "test",
             "Values": [
                 {
-                    "Language": "ru",
-                    "Text": "Тест"
-                },
-                {
                     "Language": "en",
                     "Text": "Test"
+                },
+                {
+                    "Language": "ru",
+                    "Text": "Тест"
                 }
             ]
         },
         {
-            "Key": "play",
+            "Key": "Jopa",
             "Values": [
                 {
-                    "Language": "ru",
-                    "Text": "Играть"
+                    "Language": "en",
+                    "Text": "Jopa"
                 },
                 {
+                    "Language": "ru",
+                    "Text": "Жопа"
+                }
+            ]
+        },
+        {
+            "Key": "yes",
+            "Values": [
+                {
                     "Language": "en",
-                    "Text": ""
+                    "Text": "Yes"
+                },
+                {
+                    "Language": "ru",
+                    "Text": "No"
+                }
+            ]
+        },
+        {
+            "Key": "miss",
+            "Values": [
+                {
+                    "Language": "en",
+                    "Text": "Miss"
+                },
+                {
+                    "Language": "ru",
+                    "Text": "Промазал"
                 }
             ]
         }

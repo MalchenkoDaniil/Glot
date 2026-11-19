@@ -7,32 +7,29 @@ namespace Localization.Core
     public abstract class BaseLocalizer<TProvider> : MonoBehaviour where TProvider : class, ILocalizationEvents
     {
         protected TProvider Provider { get; private set; }
-        
+
         [SerializeField, LocalizationKey] protected string localizationKey;
-        
-        // [Inject]
-        /*public*/ void Construct(TProvider provider)
+
+        public string LocalizationKey => localizationKey;
+
+        public void Construct(TProvider provider)
         {
-            if (isActiveAndEnabled) 
+            if (isActiveAndEnabled)
                 Unsubscribe();
-            
+
             Provider = provider;
-            
-            if (isActiveAndEnabled) 
+
+            if (isActiveAndEnabled)
                 Subscribe();
         }
 
         protected virtual void OnEnable()
         {
-            // For test
-            Construct(LocalizationLocator.Current as  TProvider);
-            
+            Construct(LocalizationLocator.Current as TProvider);
+
             if (Provider == null)
-            {
-                Debug.LogError($"[{GetType().Name}] Localization non initialized", this);
                 return;
-            }
-            
+
             Subscribe();
         }
 
@@ -46,7 +43,9 @@ namespace Localization.Core
 
         public void Refresh()
         {
-            if (Provider == null || string.IsNullOrEmpty(localizationKey)) return;
+            if (Provider == null || string.IsNullOrEmpty(localizationKey))
+                return;
+
             Apply(Provider);
         }
 
@@ -54,16 +53,16 @@ namespace Localization.Core
 
         private void Subscribe()
         {
-            if (Provider == null) 
+            if (Provider == null)
                 return;
-            
+
             Provider.LanguageChanged += Refresh;
             Refresh();
         }
 
         private void Unsubscribe()
         {
-            if (Provider != null) 
+            if (Provider != null)
                 Provider.LanguageChanged -= Refresh;
         }
     }

@@ -1,9 +1,31 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Localization.Core
 {
     public static class SystemLanguageCodes
     {
+        private static readonly string[] SupportedCodes =
+        {
+            "en", "ru", "uk", "be", "de", "fr", "es", "pt", "it", "tr", "pl", "ja", "ko", "zh"
+        };
+
+        public static IReadOnlyList<string> AllCodes => SupportedCodes;
+
+        public static bool IsKnownCode(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return false;
+
+            for (int i = 0; i < SupportedCodes.Length; i++)
+            {
+                if (SupportedCodes[i] == code)
+                    return true;
+            }
+
+            return false;
+        }
+
         public static string From(SystemLanguage language)
         {
             switch (language)
