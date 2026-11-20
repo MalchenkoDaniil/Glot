@@ -1,0 +1,9 @@
+{
+  "name": "com.glot.localizer",
+  "version": "1.0.0",
+  "displayName": "Localizer",
+  "unity": "6000.0",
+  "dependencies": {
+    "com.unity.ugui": "2.0.0"
+  }
+}

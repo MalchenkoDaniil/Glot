@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.glot.localizer": {
+      "version": "file:com.glot.localizer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0"
+      }
+    },
     "com.unity.collab-proxy": {
       "version": "2.11.3",
       "depth": 0,
