@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LocalizationConfig
   m_EditorClassIdentifier: Assembly-CSharp::Localization.Unity.LocalizationConfig
   table: {fileID: 4900000, guid: de3f53d0b3bb54f48868dcab2ac4527d, type: 3}
-  defaultLanguage: ru
+  defaultLanguage: en
   languages:
   - en
   - ru
